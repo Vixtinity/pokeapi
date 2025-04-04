@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body> 
+<nav>
+    
+</nav>
+    <script>
+     const fetchData = async (id) => {
+     try {
+     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+     if (!res.ok) throw new Error("Pokémon no encontrado");
+     const data = await res.json();
+     const pokemon = {
+     numero: data.id,
+     img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`,
+     nombre: data.name,
+     };
+     document.getElementById("pokemons").innerHTML += `
+     <div>
+     <h3>${pokemon.nombre.toUpperCase()} (#${pokemon.numero})</h3>
+    <img src="${pokemon.img}" alt="${pokemon.nombre}" width="200">
+     </div>
+     `;
+     } catch (error) {
+     console.error(error);
+     }
+     };
+     const fetchData2 = async () => {
+     const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=9`)
+     const data = await res.json()
+     let pokemon;
+     //Recorrer cada pokemon
+     document.getElementById("tabla").innerHTML +=data.results.map((x,index)=> {
+     pokemon = {
+     numero: index+1,
+    img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${index+1}.png`,nombre: x.name,
+     }
+     return `<tr> <td> ${pokemon.numero} </td> <td>${pokemon.nombre}</td> <td><img src=${pokemon.img} alt="pokemon" width="200"/></td> </tr>`;
+     }).join("");//Mira el efecto si no se hace este join
+     }
+    </script>
+ <section id="pokemons">
+ <h2> USANDO LA POKEAPI </h2>
+ <script>
+ fetchData(17); fetchData(150); fetchData(6);
+ </script>
+ </section>
+ <h3> TABLA</h3>
+ <table>
+ <thead>
+ <tr>
+ <th>Número</th> <th>Nombre</th><th>Imagen</th>
+ </tr>
+ </thead>
+ <tbody id="tabla">
+ <script>fetchData2();</script>
+ </tbody>
+ </table>
+</body>
+</html>
